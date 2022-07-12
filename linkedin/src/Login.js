@@ -12,26 +12,39 @@ function Login() {
 	const register = () => {
 		if (!name) alert("Please enter a full name!");
 
-		auth.createUserWithEmailAndPassword(email, password).then((userAuth) => {
-			userAuth.user
-				.updateProfile({
-					displayName: name,
-					photoURL: profilePic,
-				})
-				.then(() => {
-					dispatch(
-						login({
-							email: userAuth.user.email,
-							uid: userAuth.user.uid,
-							displayName: name,
-							photoUrl: profilePic,
-						})
-					);
-				});
-		}).catch((err) => alert(err));
+		auth
+			.createUserWithEmailAndPassword(email, password)
+			.then((userAuth) => {
+				userAuth.user
+					.updateProfile({
+						displayName: name,
+						photoURL: profilePic,
+					})
+					.then(() => {
+						dispatch(
+							login({
+								email: userAuth.user.email,
+								uid: userAuth.user.uid,
+								displayName: name,
+								photoUrl: profilePic,
+							})
+						);
+					});
+			})
+			.catch((err) => alert(err));
 	};
 	const loginToApp = (e) => {
-		e.preventDefault();
+        e.preventDefault();
+        auth.signInWithEmailAndPassword(email,password)
+        .then(userAuth=>{
+            dispatch(login({
+                email: userAuth.user.email,
+                uid: userAuth.user.uid,
+                displayName: userAuth.user.displayName,
+                photoUrl: userAuth.user.photoURL,
+            })
+        )}).catch(err=> alert(err));
+		
 	};
 	return (
 		<div className="login">
